@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokemon battle</title>
+    <link href='http://fonts.googleapis.com/css?family=Orbitron:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/battle.css"/>
+</head>
+<body>
+
+    
+    <div class="PokemonBattle">
+        
+    </div>
+<script type="text/template" id="template-battle">
+    <button id="start" class="Start"></button>
+    <div class="Console">
+    </div>
+</script>
+
+<script type="text/template" id="template-setting">
+    <div class="Pokedex-left">
+        <div class="Pokedex-leftTop">
+            <div class="Btn Btn--coral Btn--big Btn--rounded" id="light"></div>
+            <div class="Btn Btn--red Btn--small Btn--rounded"></div>
+            <div class="Btn Btn--yellow Btn--small Btn--rounded"></div>
+            <div class="Btn Btn--green Btn--small Btn--rounded"></div>
+        </div>
+        <div class="Pokedex-window" >
+            <div class="Pokedex-sprite" id="sprite">
+                <% if(pokemon){ %>
+                    <img src=<%= pokemon.sprite %> class=""/>
+                    <%= pokemon.name %>
+                <% } %>
+            </div>
+        </div>
+        <div class="Pokedex-leftBottom">
+            <div class="Btn Btn--blue Btn--medium Btn--rounded"></div>
+            <div class="Btn Btn--green Btn--large Btn--round"></div>
+            <div class="Btn Btn--orange Btn--large Btn--round"></div>
+            <form action="/pokemon/" class="Pokedex-search" id="search">
+                <input type="text" placeholder="Buscar..." name="pokemon">
+            </form>
+            <a id="play" href="#battle">Jugar</a>
+
+        </div>
+    </div>
+    <div class="Pokedex-rightFrontface">
+        <div class="Pokedex-rightFrontfaceTop"></div>
+        <div class="Pokedex-description">
+            <p id="description">
+                <% if(pokemon){ %>
+                    <%= pokemon.name %>
+                    <%= pokemon.description %>
+                <% } %>
+            </p>
+        </div>
+        <div class="Pokedex-rightFrontfaceBottom">
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+            <div class="Btn Btn--blue Btn--medium"></div>
+        </div>
+    </div>
+    <div class="Pokedex-rightBackface">
+        <div class="Pokedex-rightBackfaceTop"></div>
+    </div>
+</script>
+
+<script type="text/template" id="pokemon-template">
+    <div class="Pokemon-sprite" style="background-image:url(<%= pokemon.sprite %>)">
+    </div>
+    <% if(pokemon.sound != "media/sounds/undefined"){ %>
+        <audio src="http://veekun.com/dex/media/pokemon/cries/<%= pokemon.national_id %>.ogg" autoplay></audio>
+    <% } %>
+    <div class="Stats">
+        <div class="Stats-top">
+            <div class="Pokemon-name"><%= pokemon.name %></div>
+            <div class="Pokemon-level">LVL <%= pokemon.level %></div>
+        </div>
+        <div class="Stats-lifeContainer">
+            <span class="Stats-tag">HP</span>  
+            <div class="Stats-life"> 
+                <div class="Stats-bar" style="width: <%= pokemon.lifePercentage %>%"> 
+                    <%= pokemon.life %>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script src="js/public/battle.js"></script>
+
+
+</body>
+</html>

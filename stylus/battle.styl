@@ -1,0 +1,159 @@
+@import 'nib'
+vendor-prefixes = o ms moz webkit official
+
+
+body
+    margin 0
+    background black
+    font-family: 'Orbitron', sans-serif;
+
+@import "components/settings.styl"
+
+
+//variables
+rojo     = #DD092F
+amarillo = #FFCC00
+verde    = #30FA04
+coral    = #05FBFB
+azul     = #509BFB
+
+radius   = 10px
+
+
+@import "pokedex/includes/mixins.styl"
+@import "pokedex/includes/utilidades.styl"
+@import "pokedex/includes/botones.styl"
+@import "pokedex/includes/pokedex.styl"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//utilities
+
+.u-hidden
+    display none
+
+.Stadium
+    background-image url('http://img4.wikia.nocookie.net/__cb20090424143324/es.pokemon/images/e/e4/Campo_de_batalla_DPPt_2.png')
+    background-position center
+    background-size cover
+    bottom 0
+    height 400px
+    left 0
+    margin 0 auto
+    margin-top -220px
+    padding 20px
+    position absolute
+    right 0
+    top 50%
+    width 700px
+
+.Start
+    background url('../images/pokeball.png') no-repeat center
+    background-size 100%
+    border none
+    bottom 5px
+    cursor pointer
+    height 50px
+    outline 0
+    padding 0
+    position absolute
+    right 5px 
+    width 50px
+    z-index 2
+    &:active
+        transform scale(.8)
+
+
+.Pokemon
+    position absolute
+    padding 20px
+    left 0
+    right 0
+    overflow hidden
+    &:nth-of-type(2)
+        bottom 0
+        .Pokemon-sprite
+            float left
+            transform rotateY(180deg)
+
+        .Stats
+            float right
+            
+    &:nth-of-type(3)
+        top 0
+        .Pokemon-sprite
+            float right
+            margin-top 120px
+            margin-right 100px
+        .Stats
+            float left
+
+    .Pokemon-sprite
+        width 120px
+        height 120px
+        // width 300px
+        // height 300px
+        // zoom .5
+        // background-size 100%
+        background-repeat no-repeat
+        background-position center bottom
+        // zoom 2
+        // animation pokemon .6s steps(4) infinite
+    
+    &-level
+        float right
+    &-name
+        float left
+    
+@keyframes pokemon
+    to
+        background-position 0 -1200px
+
+
+.Stats
+    background #F0F0D0
+    border 5px solid black
+    border-radius 10px 
+    margin-top 10px
+    padding 10px
+    width 300px
+    &-top
+        overflow hidden
+    &-life
+        background red
+        border 2px solid white
+        border-radius 20px
+        margin-left 40px
+        overflow hidden
+    &-lifeContainer
+        background black
+        border-radius 20px
+        margin-top 10px
+        padding 5px 
+    &-tag
+        color #E67959
+        float left
+        font-size 20px
+        font-weight bold
+        line-height 25px
+    &-bar
+        transition .3s
+        background #6EDAA3
+
