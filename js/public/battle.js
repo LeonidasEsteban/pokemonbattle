@@ -3346,10 +3346,19 @@ module.exports = Backbone.Router.extend({
         this.pokemons = new Pokemons();
         this.settings = {};
         this.battle = {};
-        Backbone.history.start();
 
+        //iniciar aplicación
         this.settings = new Settings(); // view settings
-        
+        Backbone.history.start();
+    },
+    root : function() {
+        var self = this;
+        //mostrar pokedex
+        self.settings.render();
+        $('.PokemonBattle').html(this.settings.$el);
+        setTimeout(function(){
+            $('.Pokedex').addClass('is-active');
+        },20);
     },
     vista : function(vista){
         var self = this;
@@ -3360,13 +3369,9 @@ module.exports = Backbone.Router.extend({
             setTimeout(function(){
                 self.battle.pokemons = self.settings.pokemons;
             },2000);
-        }else{
-            //iniciar aplicación
-            this.settings.render();
-            $('.PokemonBattle').html(this.settings.$el);
-            setTimeout(function(){
-                $('.Pokedex').addClass('is-active');
-            },20);
+            if(localStorage.length >= 3){
+                pokemons.fetch();
+            }
         }
     },
     battle : function(opponent){
@@ -3580,11 +3585,10 @@ module.exports = Backbone.View.extend({
         e.preventDefault();
 
         Backbone.history.navigate('battle', {'trigger':true});
+        localStorage.clear();
         pokemon = new PokemonBattle.Models.Pokemon(this.pokemonChosen);
         this.pokemons.add(pokemon);
-        pokemon.save({
-            title : 'lol',
-        });
+        pokemon.save();
 
         var random = Math.floor(Math.random() * 718) +1;
 

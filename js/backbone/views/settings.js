@@ -117,11 +117,10 @@ module.exports = Backbone.View.extend({
         e.preventDefault();
 
         Backbone.history.navigate('battle', {'trigger':true});
+        localStorage.clear();
         pokemon = new PokemonBattle.Models.Pokemon(this.pokemonChosen);
         this.pokemons.add(pokemon);
-        pokemon.save({
-            title : 'lol',
-        });
+        pokemon.save();
 
         var random = Math.floor(Math.random() * 718) +1;
 
