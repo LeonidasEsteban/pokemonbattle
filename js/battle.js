@@ -1,6 +1,9 @@
 window.$ = require('jquery');
 window._ = require('underscore');
 var Backbone = require('backbone');
+Backbone.$ = $;
+var Marionette = require('backbone.marionette');
+
 
 Backbone.$ = $;
 
