@@ -2,20 +2,36 @@ window.$ = require('jquery');
 window._ = require('underscore');
 var Backbone = require('backbone');
 
-module.exports = Backbone.View.extend({
+Backbone.$ = $;
+
+var PokemonBattle = {};
+PokemonBattle.Models = {};
+PokemonBattle.Views = {};
+PokemonBattle.Collections = {};
+
+PokemonBattle.Views.Pokemon = require('../views/pokemon');
+
+
+var noPokemon = Backbone.Marionette.ItemView.extend({
+    template : '#no-pokemon',
+});
+
+
+module.exports = Backbone.Marionette.CompositeView.extend({
     events : {
         'click #start' : 'turn',
     },
-    template : _.template($('#template-battle').html()),
+    template : '#template-battle',
     className : "Stadium",
+    childView : PokemonBattle.Views.Pokemon,
+    emptyView : noPokemon,
+    childViewContainer : '#pokemons',
     initialize : function(model){
         this.battleTurn = 0;
-
-        this.pokemons = {};
     },
     turn : function(){
-        var pokemonTurn = this.pokemons.models[this.battleTurn];
-        var opponent    = _.without(this.pokemons.models, pokemonTurn)[0];
+        var pokemonTurn = this.collection.models[this.battleTurn];
+        var opponent    = _.without(this.collection.models, pokemonTurn)[0];
 
         pokemonTurn.attack(opponent);
 
@@ -25,9 +41,4 @@ module.exports = Backbone.View.extend({
             this.battleTurn = 0;
         }
     },
-    render : function(){
-        this.$el.attr('id','Stadium');
-        this.$el.html(this.template);
-        $('.PokemonBattle').html(this.$el);
-    }
 });

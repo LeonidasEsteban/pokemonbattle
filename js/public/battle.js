@@ -3247,6 +3247,11 @@ module.exports = Backbone.Model.extend({
             "lifeStatus" : this.get('life'),
             "lifePercentage" : 100,
         });
+        if(this.get('moves').length === 0){
+            this.set('moves',[
+                {'name': "Placaje",'damage':20},
+            ]);
+        }
 
     },
     attack : function(opponent){
@@ -3274,23 +3279,27 @@ module.exports = Backbone.Model.extend({
     },
     getAttack : function(){
         var moves = this.get('moves').length;
-        var move = Math.floor( Math.random() * moves);
-        console.log(this.get('moves')[move].name);
 
+        var move = Math.floor( Math.random() * moves);
         var deferred = $.Deferred();
 
-        var xhr = $.ajax({
-            url: 'http://pokeapi.co' + this.get('moves')[move].resource_uri,
-            type: 'GET',
-            crossDomain: true,
-            dataType: 'jsonp',
-            context: self,
-        });
+        if(this.get('moves')[move].damage){
+            deferred.resolve(this.get('moves')[move].damage);
+        }else{
 
-        xhr.done(function(move){
-            // console.log(move.power);
-            deferred.resolve(move.power);
-        });
+            var xhr = $.ajax({
+                url: 'http://pokeapi.co' + this.get('moves')[move].resource_uri,
+                type: 'GET',
+                crossDomain: true,
+                dataType: 'jsonp',
+                context: self,
+            });
+
+            xhr.done(function(move){
+                deferred.resolve(move.power);
+            });
+        }
+        console.log(this.get('moves')[move].name);
         return deferred.promise();
 
 
@@ -3306,10 +3315,7 @@ module.exports = Backbone.Model.extend({
 
         var life = pokemon.get('life') - damage;
 
-        if(life <= 0){
-            life = 0;
-            this.finish(pokemon);
-        }
+
         pokemon.set({
             'life' : life,
         });
@@ -3321,41 +3327,31 @@ module.exports = Backbone.Model.extend({
 
         console.log(damage);
     },
-    finish : function(loser){
-        loser.destroy();
-    }
 });
 },{"backbone":14,"jquery":15,"underscore":16}],6:[function(require,module,exports){
 window.$     = require('jquery');
 window._     = require('underscore');
 var Backbone = require('backbone');
+var Marionette = require('backbone.marionette');
 
 var Settings = require('../views/settings');
 var Battle   = require('../views/battle');
 var Pokemons = require('../collections/pokemons');
 
 
-//PokemonBattle.Routers.Settings 
-module.exports = Backbone.Router.extend({
+module.exports = Backbone.Marionette.AppRouter.extend({
     routes : {
         "" : "root",
         ":vista" : "vista",
-        "vista/:opponent" : "battle",
+        "vista/:opponent" : "customBattle",
     },
     initialize : function(){
-        this.pokemons = new Pokemons();
-        this.settings = {};
-        this.battle = {};
-
-        //iniciar aplicación
-        this.settings = new Settings(); // view settings
-        Backbone.history.start();
     },
     root : function() {
+        this.settings = new Settings(); // view settings
         var self = this;
         //mostrar pokedex
-        self.settings.render();
-        $('.PokemonBattle').html(this.settings.$el);
+        Aplicacion.wrapper.show(this.settings);
         setTimeout(function(){
             $('.Pokedex').addClass('is-active');
         },20);
@@ -3364,17 +3360,17 @@ module.exports = Backbone.Router.extend({
         var self = this;
 
        if(vista == "battle"){
-            this.battle = new Battle(); //view battle
-            this.battle.render();
-            setTimeout(function(){
-                self.battle.pokemons = self.settings.pokemons;
-            },2000);
             if(localStorage.length >= 3){
+                var pokemons = new Pokemons();
                 pokemons.fetch();
+                this.battle = new Battle({collection:pokemons}); //view battle
+                Aplicacion.wrapper.show(this.battle);
+            }else{
+                Backbone.history.navigate('', {'trigger':true});
             }
         }
     },
-    battle : function(opponent){
+    customBattle : function(opponent){
 
     }
 });
@@ -3382,90 +3378,7 @@ module.exports = Backbone.Router.extend({
 
 
 
-},{"../collections/pokemons":4,"../views/battle":7,"../views/settings":9,"backbone":14,"jquery":15,"underscore":16}],7:[function(require,module,exports){
-window.$ = require('jquery');
-window._ = require('underscore');
-var Backbone = require('backbone');
-
-module.exports = Backbone.View.extend({
-    events : {
-        'click #start' : 'turn',
-    },
-    template : _.template($('#template-battle').html()),
-    className : "Stadium",
-    initialize : function(model){
-        this.battleTurn = 0;
-
-        this.pokemons = {};
-    },
-    turn : function(){
-        var pokemonTurn = this.pokemons.models[this.battleTurn];
-        var opponent    = _.without(this.pokemons.models, pokemonTurn)[0];
-
-        pokemonTurn.attack(opponent);
-
-        if(this.battleTurn === 0){
-            this.battleTurn = 1;
-        }else{
-            this.battleTurn = 0;
-        }
-    },
-    render : function(){
-        this.$el.attr('id','Stadium');
-        this.$el.html(this.template);
-        $('.PokemonBattle').html(this.$el);
-    }
-});
-
-},{"backbone":14,"jquery":15,"underscore":16}],8:[function(require,module,exports){
-window.$ = require('jquery');
-window._ = require('underscore');
-var Backbone = require('backbone');
-
-// PokemonBattle.Views.Pokemon
-module.exports = Backbone.View.extend({
-    events : {
-    },
-    className : 'Pokemon',
-    template : _.template($('#pokemon-template').html()),
-    initialize : function(model){
-        var self      = this;
-        this.model    = model;
-        this.listenTo(this.collection, "add", this.addOne, this);
-        model.on('change', function(){
-            self.render();
-        });
-
-        model.on('destroy',function(){
-            self.$el.slideUp();
-        });
-    },
-    addOne : function(model){
-        // debugger;
-    },
-    render : function(){
-        var self = this;
-        var pokemon = {pokemon : this.model.toJSON()};
-        var html = this.template(pokemon);
-
-        this.$el.html(html);
-        this.$life  = this.$el.find('.Stats-bar');
-
-        this.setStatusBar();
-    },
-    setStatusBar : function(){
-        var self = this;
-
-        self.$life.css('width', self.model.get('lifePercentageBefore')+"%");
-        var renderLife = function(){
-            self.$life.css('width', self.model.get('lifePercentage')+"%");
-        };
-
-        _.delay(renderLife, 20);
-    }
-
-});
-},{"backbone":14,"jquery":15,"underscore":16}],9:[function(require,module,exports){
+},{"../collections/pokemons":4,"../views/battle":7,"../views/settings":9,"backbone":14,"backbone.marionette":11,"jquery":15,"underscore":16}],7:[function(require,module,exports){
 window.$ = require('jquery');
 window._ = require('underscore');
 var Backbone = require('backbone');
@@ -3477,40 +3390,129 @@ PokemonBattle.Models = {};
 PokemonBattle.Views = {};
 PokemonBattle.Collections = {};
 
-PokemonBattle.Models.Pokemon = require('../models/pokemon');
-PokemonBattle.Collections.Pokemons = require('../collections/pokemons');
 PokemonBattle.Views.Pokemon = require('../views/pokemon');
 
 
-module.exports = Backbone.View.extend({
-    events : {
-        "submit #search" : "submit",
-        "click #play" : "battle"
+var noPokemon = Backbone.Marionette.ItemView.extend({
+    template : '#no-pokemon',
+});
 
+
+module.exports = Backbone.Marionette.CompositeView.extend({
+    events : {
+        'click #start' : 'turn',
+    },
+    template : '#template-battle',
+    className : "Stadium",
+    childView : PokemonBattle.Views.Pokemon,
+    emptyView : noPokemon,
+    childViewContainer : '#pokemons',
+    initialize : function(model){
+        this.battleTurn = 0;
+    },
+    turn : function(){
+        var pokemonTurn = this.collection.models[this.battleTurn];
+        var opponent    = _.without(this.collection.models, pokemonTurn)[0];
+
+        pokemonTurn.attack(opponent);
+
+        if(this.battleTurn === 0){
+            this.battleTurn = 1;
+        }else{
+            this.battleTurn = 0;
+        }
+    },
+});
+
+},{"../views/pokemon":8,"backbone":14,"jquery":15,"underscore":16}],8:[function(require,module,exports){
+window.$ = require('jquery');
+window._ = require('underscore');
+var Backbone = require('backbone');
+
+
+
+module.exports = Backbone.Marionette.ItemView.extend({
+    events : {
+    },
+    className : 'Pokemon',
+    template : '#pokemon-template',
+    ui : {
+        'statusBar' : '.Stats-bar',
+    },
+    modelEvents: {
+        'change:life': 'setStatusBar state',
+    },
+    onDestroy : function(){
+        this.$el.css('background','red');
+        console.log('se murió');
+    },
+    state : function(){
+        var self = this;
+        if(this.model.get('life') <= 0){
+            this.$el.slideUp(1000,function(){
+                self.model.destroy();
+            });
+        }
+    },
+    setStatusBar : function(){
+        var self = this;
+        this.ui.statusBar.text(this.model.get('life'));
+        this.ui.statusBar.css('width', self.model.get('lifePercentageBefore')+"%");
+        var renderLife = function(){
+            self.ui.statusBar.css('width', self.model.get('lifePercentage')+"%");
+        };
+
+        _.delay(renderLife, 20);
+    }
+
+});
+},{"backbone":14,"jquery":15,"underscore":16}],9:[function(require,module,exports){
+window.$ = require('jquery');
+window._ = require('underscore');
+var Backbone = require('backbone');
+var Marionette = require('backbone.marionette');
+
+Backbone.$ = $;
+
+var PokemonBattle = {};
+PokemonBattle.Models = {};
+PokemonBattle.Views = {};
+PokemonBattle.Collections = {};
+
+PokemonBattle.Models.Pokemon = require('../models/pokemon');
+PokemonBattle.Collections.Pokemons = require('../collections/pokemons');
+PokemonBattle.Views.Battle = require('../views/battle');
+
+
+var Sprite = Backbone.Marionette.ItemView.extend({
+    template : '#template-pokeWindow',
+});
+var Description = Backbone.Marionette.ItemView.extend({
+    template : '#template-pokeDescription',
+});
+
+
+module.exports = Marionette.LayoutView.extend({
+    events : {
+        "submit @ui.form" : "search",
+        "click @ui.play" : "play",
+    },
+    template : '#template-setting',
+    regions : {
+        window : '#pokedex-window',
+        description : '#pokedex-description'
     },
     className : "Pokedex",
-    template : _.template($('#template-setting').html()),
-
+    ui : {
+        'form' : '#search',
+        'play' : '#play',
+    },
     initialize : function(){
         this.pokeapiURL = "http://pokeapi.co";
         this.pokeapiV = "/api/v1";
-        this.pokemons = window.pokemons = new PokemonBattle.Collections.Pokemons();
-
-        this.pokemons.on('add',function(model){
-            setTimeout(function(){
-                var pokemon = new PokemonBattle.Views.Pokemon(model);
-                pokemon.render();
-                $('.Stadium').append(pokemon.$el);
-            },1000);
-        });
-
-        this.pokemons.on('add',this.addToCollection, this);
-
+        this.pokemons = new PokemonBattle.Collections.Pokemons();
     },
-    addToCollection : function (model) {
-        // debugger;
-    },
-    search : function(url){
+    ajax : function(url){
         var self = this;
 
         var deferred = $.Deferred();
@@ -3532,90 +3534,84 @@ module.exports = Backbone.View.extend({
     getPokemon : function(pokemon){
         var self = this;
 
-        this.getPokemonSprite(pokemon.sprites[0].resource_uri, pokemon.descriptions[0].resource_uri).done(function(sprite, description){
-            // console.log(description)
+        this.getPokemonData(pokemon.sprites[0].resource_uri, pokemon.descriptions[0].resource_uri).done(function(sprite, description){
             pokemon.sprite = self.pokeapiURL + sprite.image;
-            pokemon.description = description;
-            self.pokemonChosen = pokemon;
-            pokemon = new PokemonBattle.Models.Pokemon(self.pokemonChosen);
+            var pokemonModel = new PokemonBattle.Models.Pokemon(pokemon);
+            sprite = new Sprite({model:pokemonModel});
+            self.window.show(sprite);
 
-            self.render(pokemon.toJSON());
-
-
+            localStorage.clear();
+            self.pokemons.add(pokemonModel);
+            pokemonModel.save();
         });
+
+        this.getPokemonData(pokemon.descriptions[0].resource_uri).done(function(description){
+            pokemon.description = description.description;
+            var pokemonModel = new PokemonBattle.Models.Pokemon(pokemon);
+            description = new Description({model:pokemonModel});
+            self.description.show(description);
+        });
+
 
         
     },
-    getPokemonSprite : function(url){
+    getPokemonData : function(url){
         var deferred = $.Deferred();
 
-        this.search(url).done(function(data){
-            sprite = data;
+        this.ajax(url).done(function(data){
             deferred.resolve(data);
         });
 
         return deferred.promise();
 
     },
-    submit : function(e){
+    search : function(e){
         e.preventDefault();
 
         var self = this;
 
-        var action  = this.$form.attr('action');
-        var pokemon = this.$form.find('[name=pokemon]').val();
+        var action  = this.ui.form.attr('action');
+        var pokemon = this.ui.form.find('[name=pokemon]').val();
         var search  = action+pokemon;
-
-        this.search(self.pokeapiV + search).done(function(data){
+        this.ajax(self.pokeapiV + search).done(function(data){
             self.getPokemon(data);
         });
 
     },
-    render : function(pokemon){
-
-        pokemon = {pokemon : pokemon };
-        var html = this.template(pokemon);
-        this.$el.html(html);
-
-        this.$form = this.$el.find('#search');
-
-    },
-    battle : function(e){
+    play : function(e){
         var self = this;
         e.preventDefault();
 
-        Backbone.history.navigate('battle', {'trigger':true});
-        localStorage.clear();
-        pokemon = new PokemonBattle.Models.Pokemon(this.pokemonChosen);
-        this.pokemons.add(pokemon);
-        pokemon.save();
-
         var random = Math.floor(Math.random() * 718) +1;
 
-        self.search(self.pokeapiV + '/pokemon/'+random).done(function(pokemon){
+        self.ajax(self.pokeapiV + '/pokemon/'+random).done(function(pokemon){
 
-            self.getPokemonSprite(pokemon.sprites[0].resource_uri).done(function(sprite){
+            self.getPokemonData(pokemon.sprites[0].resource_uri).done(function(sprite){
 
                 pokemon.sprite = self.pokeapiURL + sprite.image;
                 
-                var opponent = new PokemonBattle.Models.Pokemon(pokemon);
+                var pokemonModel = new PokemonBattle.Models.Pokemon(pokemon);
 
-                self.pokemons.add(opponent);
-                opponent.save();
+
+                self.pokemons.add(pokemonModel);
+                pokemonModel.save();
+                Backbone.history.navigate('battle', {'trigger':true});
+
+                var battle = new PokemonBattle.Views.Battle({
+                    collection : self.pokemons,
+                });
+                Aplicacion.wrapper.show(battle);
 
             });
         });
 
     },
-    pokemons : function(callback){
 
-        return this.pokemons;
-    }
 
 
 
 });
-},{"../collections/pokemons":4,"../models/pokemon":5,"../views/pokemon":8,"backbone":14,"jquery":15,"underscore":16}],10:[function(require,module,exports){
+},{"../collections/pokemons":4,"../models/pokemon":5,"../views/battle":7,"backbone":14,"backbone.marionette":11,"jquery":15,"underscore":16}],10:[function(require,module,exports){
 window.$ = require('jquery');
 window._ = require('underscore');
 var Backbone = require('backbone');
@@ -3632,12 +3628,28 @@ PokemonBattle.Routers = {};
 PokemonBattle.Routers.Settings = require('./backbone/routers/settings');
 
 
+//Instancia de una aplicación Marionette
+Aplicacion = new Backbone.Marionette.Application();
+ 
+Aplicacion.addRegions({
+  wrapper: ".PokemonBattle",
+});
 
-var Game = new PokemonBattle.Routers.Settings();
+
+Aplicacion.addInitializer(function(options){
+    var Game = new PokemonBattle.Routers.Settings();
+});
 
 
 
+Aplicacion.on("start", function(options){
+  if (Backbone.history){
+    Backbone.history.start();
+  }
+});
 
+//lanzar app
+Aplicacion.start(); 
 
 },{"./backbone/routers/settings":6,"backbone":14,"backbone.marionette":11,"jquery":15,"underscore":16}],11:[function(require,module,exports){
 // MarionetteJS (Backbone.Marionette)

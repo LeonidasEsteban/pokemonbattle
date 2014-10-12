@@ -23,6 +23,11 @@ module.exports = Backbone.Model.extend({
             "lifeStatus" : this.get('life'),
             "lifePercentage" : 100,
         });
+        if(this.get('moves').length === 0){
+            this.set('moves',[
+                {'name': "Placaje",'damage':20},
+            ]);
+        }
 
     },
     attack : function(opponent){
@@ -50,23 +55,27 @@ module.exports = Backbone.Model.extend({
     },
     getAttack : function(){
         var moves = this.get('moves').length;
-        var move = Math.floor( Math.random() * moves);
-        console.log(this.get('moves')[move].name);
 
+        var move = Math.floor( Math.random() * moves);
         var deferred = $.Deferred();
 
-        var xhr = $.ajax({
-            url: 'http://pokeapi.co' + this.get('moves')[move].resource_uri,
-            type: 'GET',
-            crossDomain: true,
-            dataType: 'jsonp',
-            context: self,
-        });
+        if(this.get('moves')[move].damage){
+            deferred.resolve(this.get('moves')[move].damage);
+        }else{
 
-        xhr.done(function(move){
-            // console.log(move.power);
-            deferred.resolve(move.power);
-        });
+            var xhr = $.ajax({
+                url: 'http://pokeapi.co' + this.get('moves')[move].resource_uri,
+                type: 'GET',
+                crossDomain: true,
+                dataType: 'jsonp',
+                context: self,
+            });
+
+            xhr.done(function(move){
+                deferred.resolve(move.power);
+            });
+        }
+        console.log(this.get('moves')[move].name);
         return deferred.promise();
 
 
@@ -82,10 +91,7 @@ module.exports = Backbone.Model.extend({
 
         var life = pokemon.get('life') - damage;
 
-        if(life <= 0){
-            life = 0;
-            this.finish(pokemon);
-        }
+
         pokemon.set({
             'life' : life,
         });
@@ -97,7 +103,4 @@ module.exports = Backbone.Model.extend({
 
         console.log(damage);
     },
-    finish : function(loser){
-        loser.destroy();
-    }
 });

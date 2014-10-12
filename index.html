@@ -16,8 +16,15 @@
     <button id="start" class="Start"></button>
     <div class="Console">
     </div>
+    <div id="pokemons"></div>
 </script>
-
+<script type="text/template" id="template-pokeWindow">
+        <img src="<%= sprite %>" class=""/>
+</script>
+<script type="text/template" id="template-pokeDescription">
+        <%= name %>
+        <%= description %>
+</script>
 <script type="text/template" id="template-setting">
     <div class="Pokedex-left">
         <div class="Pokedex-leftTop">
@@ -27,11 +34,8 @@
             <div class="Btn Btn--green Btn--small Btn--rounded"></div>
         </div>
         <div class="Pokedex-window" >
-            <div class="Pokedex-sprite" id="sprite">
-                <% if(pokemon){ %>
-                    <img src=<%= pokemon.sprite %> class=""/>
-                    <%= pokemon.name %>
-                <% } %>
+            <div class="Pokedex-sprite" id="pokedex-window">
+                
             </div>
         </div>
         <div class="Pokedex-leftBottom">
@@ -48,11 +52,8 @@
     <div class="Pokedex-rightFrontface">
         <div class="Pokedex-rightFrontfaceTop"></div>
         <div class="Pokedex-description">
-            <p id="description">
-                <% if(pokemon){ %>
-                    <%= pokemon.name %>
-                    <%= pokemon.description %>
-                <% } %>
+            <p id="pokedex-description">
+                
             </p>
         </div>
         <div class="Pokedex-rightFrontfaceBottom">
@@ -79,22 +80,25 @@
     </div>
 </script>
 
+<script type="text/template" id="no-pokemon">
+    Haz terminado la batalla elige de nuevo.
+</script>
+<!-- <% if(sound != "media/sounds/undefined"){ %>
+    <audio src="http://veekun.com/dex/media/pokemon/cries/<%= national_id %>.ogg" autoplay></audio>
+<% } %> -->
 <script type="text/template" id="pokemon-template">
-    <div class="Pokemon-sprite" style="background-image:url(<%= pokemon.sprite %>)">
+    <div class="Pokemon-sprite" style="background-image:url(<%= sprite %>)">
     </div>
-    <% if(pokemon.sound != "media/sounds/undefined"){ %>
-        <audio src="http://veekun.com/dex/media/pokemon/cries/<%= pokemon.national_id %>.ogg" autoplay></audio>
-    <% } %>
     <div class="Stats">
         <div class="Stats-top">
-            <div class="Pokemon-name"><%= pokemon.name %></div>
-            <div class="Pokemon-level">LVL <%= pokemon.level %></div>
+            <div class="Pokemon-name"><%= name %></div>
+            <div class="Pokemon-level">LVL <%= level %></div>
         </div>
         <div class="Stats-lifeContainer">
             <span class="Stats-tag">HP</span>  
             <div class="Stats-life"> 
-                <div class="Stats-bar" style="width: <%= pokemon.lifePercentage %>%"> 
-                    <%= pokemon.life %>
+                <div class="Stats-bar" style="width: <%= lifePercentage %>%"> 
+                    <%= life %>
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 window.$ = require('jquery');
 window._ = require('underscore');
 var Backbone = require('backbone');
+var Marionette = require('backbone.marionette');
 
 Backbone.$ = $;
 
@@ -11,38 +12,38 @@ PokemonBattle.Collections = {};
 
 PokemonBattle.Models.Pokemon = require('../models/pokemon');
 PokemonBattle.Collections.Pokemons = require('../collections/pokemons');
-PokemonBattle.Views.Pokemon = require('../views/pokemon');
+PokemonBattle.Views.Battle = require('../views/battle');
 
 
-module.exports = Backbone.View.extend({
+var Sprite = Backbone.Marionette.ItemView.extend({
+    template : '#template-pokeWindow',
+});
+var Description = Backbone.Marionette.ItemView.extend({
+    template : '#template-pokeDescription',
+});
+
+
+module.exports = Marionette.LayoutView.extend({
     events : {
-        "submit #search" : "submit",
-        "click #play" : "battle"
-
+        "submit @ui.form" : "search",
+        "click @ui.play" : "play",
+    },
+    template : '#template-setting',
+    regions : {
+        window : '#pokedex-window',
+        description : '#pokedex-description'
     },
     className : "Pokedex",
-    template : _.template($('#template-setting').html()),
-
+    ui : {
+        'form' : '#search',
+        'play' : '#play',
+    },
     initialize : function(){
         this.pokeapiURL = "http://pokeapi.co";
         this.pokeapiV = "/api/v1";
-        this.pokemons = window.pokemons = new PokemonBattle.Collections.Pokemons();
-
-        this.pokemons.on('add',function(model){
-            setTimeout(function(){
-                var pokemon = new PokemonBattle.Views.Pokemon(model);
-                pokemon.render();
-                $('.Stadium').append(pokemon.$el);
-            },1000);
-        });
-
-        this.pokemons.on('add',this.addToCollection, this);
-
+        this.pokemons = new PokemonBattle.Collections.Pokemons();
     },
-    addToCollection : function (model) {
-        // debugger;
-    },
-    search : function(url){
+    ajax : function(url){
         var self = this;
 
         var deferred = $.Deferred();
@@ -64,85 +65,79 @@ module.exports = Backbone.View.extend({
     getPokemon : function(pokemon){
         var self = this;
 
-        this.getPokemonSprite(pokemon.sprites[0].resource_uri, pokemon.descriptions[0].resource_uri).done(function(sprite, description){
-            // console.log(description)
+        this.getPokemonData(pokemon.sprites[0].resource_uri, pokemon.descriptions[0].resource_uri).done(function(sprite, description){
             pokemon.sprite = self.pokeapiURL + sprite.image;
-            pokemon.description = description;
-            self.pokemonChosen = pokemon;
-            pokemon = new PokemonBattle.Models.Pokemon(self.pokemonChosen);
+            var pokemonModel = new PokemonBattle.Models.Pokemon(pokemon);
+            sprite = new Sprite({model:pokemonModel});
+            self.window.show(sprite);
 
-            self.render(pokemon.toJSON());
-
-
+            localStorage.clear();
+            self.pokemons.add(pokemonModel);
+            pokemonModel.save();
         });
+
+        this.getPokemonData(pokemon.descriptions[0].resource_uri).done(function(description){
+            pokemon.description = description.description;
+            var pokemonModel = new PokemonBattle.Models.Pokemon(pokemon);
+            description = new Description({model:pokemonModel});
+            self.description.show(description);
+        });
+
 
         
     },
-    getPokemonSprite : function(url){
+    getPokemonData : function(url){
         var deferred = $.Deferred();
 
-        this.search(url).done(function(data){
-            sprite = data;
+        this.ajax(url).done(function(data){
             deferred.resolve(data);
         });
 
         return deferred.promise();
 
     },
-    submit : function(e){
+    search : function(e){
         e.preventDefault();
 
         var self = this;
 
-        var action  = this.$form.attr('action');
-        var pokemon = this.$form.find('[name=pokemon]').val();
+        var action  = this.ui.form.attr('action');
+        var pokemon = this.ui.form.find('[name=pokemon]').val();
         var search  = action+pokemon;
-
-        this.search(self.pokeapiV + search).done(function(data){
+        this.ajax(self.pokeapiV + search).done(function(data){
             self.getPokemon(data);
         });
 
     },
-    render : function(pokemon){
-
-        pokemon = {pokemon : pokemon };
-        var html = this.template(pokemon);
-        this.$el.html(html);
-
-        this.$form = this.$el.find('#search');
-
-    },
-    battle : function(e){
+    play : function(e){
         var self = this;
         e.preventDefault();
 
-        Backbone.history.navigate('battle', {'trigger':true});
-        localStorage.clear();
-        pokemon = new PokemonBattle.Models.Pokemon(this.pokemonChosen);
-        this.pokemons.add(pokemon);
-        pokemon.save();
-
         var random = Math.floor(Math.random() * 718) +1;
 
-        self.search(self.pokeapiV + '/pokemon/'+random).done(function(pokemon){
+        self.ajax(self.pokeapiV + '/pokemon/'+random).done(function(pokemon){
 
-            self.getPokemonSprite(pokemon.sprites[0].resource_uri).done(function(sprite){
+            self.getPokemonData(pokemon.sprites[0].resource_uri).done(function(sprite){
 
                 pokemon.sprite = self.pokeapiURL + sprite.image;
                 
-                var opponent = new PokemonBattle.Models.Pokemon(pokemon);
+                var pokemonModel = new PokemonBattle.Models.Pokemon(pokemon);
 
-                self.pokemons.add(opponent);
-                opponent.save();
+
+                self.pokemons.add(pokemonModel);
+                pokemonModel.save();
+                Backbone.history.navigate('battle', {'trigger':true});
+
+                var battle = new PokemonBattle.Views.Battle({
+                    collection : self.pokemons,
+                });
+                Aplicacion.wrapper.show(battle);
 
             });
         });
 
     },
-    pokemons : function(callback){
 
-        return this.pokemons;
-    }
 
 
 

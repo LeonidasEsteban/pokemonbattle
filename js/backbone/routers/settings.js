@@ -1,33 +1,26 @@
 window.$     = require('jquery');
 window._     = require('underscore');
 var Backbone = require('backbone');
+var Marionette = require('backbone.marionette');
 
 var Settings = require('../views/settings');
 var Battle   = require('../views/battle');
 var Pokemons = require('../collections/pokemons');
 
 
-//PokemonBattle.Routers.Settings 
-module.exports = Backbone.Router.extend({
+module.exports = Backbone.Marionette.AppRouter.extend({
     routes : {
         "" : "root",
         ":vista" : "vista",
-        "vista/:opponent" : "battle",
+        "vista/:opponent" : "customBattle",
     },
     initialize : function(){
-        this.pokemons = new Pokemons();
-        this.settings = {};
-        this.battle = {};
-
-        //iniciar aplicación
-        this.settings = new Settings(); // view settings
-        Backbone.history.start();
     },
     root : function() {
+        this.settings = new Settings(); // view settings
         var self = this;
         //mostrar pokedex
-        self.settings.render();
-        $('.PokemonBattle').html(this.settings.$el);
+        Aplicacion.wrapper.show(this.settings);
         setTimeout(function(){
             $('.Pokedex').addClass('is-active');
         },20);
@@ -36,17 +29,17 @@ module.exports = Backbone.Router.extend({
         var self = this;
 
        if(vista == "battle"){
-            this.battle = new Battle(); //view battle
-            this.battle.render();
-            setTimeout(function(){
-                self.battle.pokemons = self.settings.pokemons;
-            },2000);
             if(localStorage.length >= 3){
+                var pokemons = new Pokemons();
                 pokemons.fetch();
+                this.battle = new Battle({collection:pokemons}); //view battle
+                Aplicacion.wrapper.show(this.battle);
+            }else{
+                Backbone.history.navigate('', {'trigger':true});
             }
         }
     },
-    battle : function(opponent){
+    customBattle : function(opponent){
 
     }
 });
