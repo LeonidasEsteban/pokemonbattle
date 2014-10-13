@@ -1,0 +1,82 @@
+.Pokemon
+    position absolute
+    padding 20px
+    left 0
+    right 0
+    overflow hidden
+    &:nth-of-type(1)
+        bottom 0
+        .Pokemon-sprite
+            float left
+            transform rotateY(180deg)
+
+        .Stats
+            float right
+            
+    &:nth-of-type(2)
+        top 0
+        .Pokemon-sprite
+            float right
+            margin-top 120px
+            margin-right 100px
+        .Stats
+            float left
+
+    .Pokemon-sprite
+        // width 120px
+        width 20%
+        height 120px
+
+        background-repeat no-repeat
+        background-position center bottom
+    
+    &-level
+        float right
+    &-name
+        float left
+    
+@keyframes pokemon
+    to
+        background-position 0 -1200px
+
+.Stats
+    background #F0F0D0
+    border 5px solid black
+    border-radius 10px 
+    margin-top 10px
+    padding 10px
+    // width 300px
+    width 50%
+    &-top
+        overflow hidden
+    &-life
+        background red
+        border 2px solid white
+        border-radius 20px
+        margin-left 40px
+        overflow hidden
+    &-lifeContainer
+        background black
+        border-radius 20px
+        margin-top 10px
+        padding 5px 
+    &-tag
+        color #E67959
+        float left
+        font-size 20px
+        font-weight bold
+        line-height 25px
+    &-bar
+        transition .3s
+        background #6EDAA3
+
++to(740px)
+    .Pokemon
+        &:nth-of-type(1)
+            padding 0
+            // .Pokemon-sprite
+            //     test()
+        &:nth-of-type(2)
+            .Pokemon-sprite
+                margin-right 20px
+                margin-top 30px

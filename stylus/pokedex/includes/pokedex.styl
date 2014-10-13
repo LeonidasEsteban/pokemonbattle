@@ -1,8 +1,11 @@
+Pokedex-size = 400px
+
 .Pokedex
-    margin 100px auto 0
+    margin 0 auto
     perspective 1000px
     position relative
-    width 400px
+    width Pokedex-size
+    box-sizing border-box
     background rojo
     border-radius 10px 0 0 10px
     font-family "Source Code Pro", monospace
@@ -59,7 +62,7 @@
         box-sizing border-box
         float left
         height 500px
-        width 400px
+        width 100%
     &-leftTop
         padding 10px 20px
     &-leftBottom
@@ -140,3 +143,10 @@
             transform rotate(37deg)
             transform-origin left top
             width 0.5px
+
+
++to(400px)
+    .Pokedex
+        width auto
+        overflow hidden
+        height 100%

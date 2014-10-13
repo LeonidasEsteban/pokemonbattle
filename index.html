@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Pokemon battle</title>
+    <meta name="viewport" content="width=device-width, user-scalable=false">
     <link href='http://fonts.googleapis.com/css?family=Orbitron:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="css/battle.css"/>
 </head>
@@ -12,10 +13,16 @@
     <div class="PokemonBattle">
     </div>
 <script type="text/template" id="template-battle">
-    <button id="start" class="Start"></button>
-    <div class="Console">
+    <div class="Battle">
+        <div id="pokemons"></div>
     </div>
-    <div id="pokemons"></div>
+    <div class="Actions">
+        <button id="start" class="Start"></button>
+        <a class="Action-attack">Impact trueno</a>
+        <a class="Action-attack">Impact trueno</a>
+        <a class="Action-attack">Impact trueno</a>
+        <a class="Action-attack">Impact trueno</a>
+    </div>
 </script>
 <script type="text/template" id="template-pokeWindow">
         <img src="<%= sprite %>" class=""/>
@@ -103,6 +110,8 @@
         </div>
     </div>
 </script>
+<script src="http://192.168.0.12:35729/livereload.js?snipver=1"></script>
+
 <script src="js/public/battle.js"></script>
 
 

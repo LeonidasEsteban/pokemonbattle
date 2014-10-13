@@ -1,0 +1,45 @@
+boton_radius = 60px
+.Actions
+    // padding 20px 0
+    // background gray
+    font-size 0
+    relative()
+.Action
+    &-attack
+        width 49%
+        display inline-block
+        font-size 30px
+        cursor pointer
+        background linear-gradient(top,white 50%, lightgray )
+        text-align center
+        border 3px solid black
+        padding 20px
+        box-sizing border-box
+        margin-bottom 10px
+        &:nth-of-type(3)
+        &:nth-of-type(4)
+            margin-bottom 0
+            // test()
+        &:nth-of-type(odd)
+            border-radius(0 boton_radius boton_radius 0)
+        &:nth-of-type(even)
+            border-radius(boton_radius 0 0 boton_radius)
+            float right
+.Start
+    background url('../images/pokeball.png') no-repeat center
+    background-size 100%
+    border none
+    cursor pointer
+    height 80px
+    outline 0
+    padding 0
+    position absolute
+    right 0 
+    left 0
+    width 80px
+    z-index 2
+    top 0
+    bottom 0
+    margin auto
+    &:active
+        transform scale(.8)

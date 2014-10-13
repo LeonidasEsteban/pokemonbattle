@@ -21,7 +21,10 @@ var app = {
     src: ['../index.html']
   },
   stylus : {
-    src: ['../stylus/battle.styl'],
+    src: [
+      '../stylus/**/*.styl',
+    ],
+    master: '../stylus/battle.styl',
     dest: '../css'
   }
 };
@@ -46,12 +49,16 @@ gulp.task('watchify', ['enable-watch-mode', 'browserify']);
 
 
 var nib = require('nib');
+var rupture = require('rupture');
 // either a String or an Array
 gulp.task('stylus', function () {
-  gulp.src(app.stylus.src)
+  gulp.src(app.stylus.master)
     .pipe(stylus({
       compress:true, 
-      use: [nib()],
+      use: [
+        nib(),
+        rupture(),
+      ],
       import: "nib"
     }))
     .pipe(gulp.dest(app.stylus.dest))
