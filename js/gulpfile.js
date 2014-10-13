@@ -11,14 +11,31 @@ var gulp        = require('gulp'),
     stylus = require('gulp-stylus'),
     livereload = require('gulp-livereload');
 
+
+var app = {
+  js : {
+    src : ['battle.js'],
+    dest : './public'
+  },
+  html : {
+    src: ['../index.html']
+  },
+  stylus : {
+    src: ['../stylus/battle.styl'],
+    dest: '../css'
+  }
+};
+
+
+
 //js bundle
 gulp.task('browserify', watchify(function(watchify) {
-    return gulp.src('battle.js')
+    return gulp.src(app.js.src)
         .pipe(watchify({
             watch:watching
         }))
-        // .pipe(streamify(uglify()))
-        .pipe(gulp.dest('./public'))
+        .pipe(streamify(uglify()))
+        .pipe(gulp.dest(app.js.dest))
         .pipe(livereload({auto:true}));
 }));
 var watching = false;
@@ -31,64 +48,25 @@ gulp.task('watchify', ['enable-watch-mode', 'browserify']);
 var nib = require('nib');
 // either a String or an Array
 gulp.task('stylus', function () {
-  gulp.src('../stylus/battle.styl')
-    .pipe(stylus({compress:true, use: [nib()]}))
-    .pipe(gulp.dest('../css'))
+  gulp.src(app.stylus.src)
+    .pipe(stylus({
+      compress:true, 
+      use: [nib()],
+      import: "nib"
+    }))
+    .pipe(gulp.dest(app.stylus.dest))
     .pipe(livereload({auto:true}));
+});
+
+gulp.task('html',function(){
+    gulp.src(app.html.src)
+        .pipe(livereload({auto:true}));
 });
 
 gulp.task('watch',function(){
   livereload.listen();
-  gulp.watch('../stylus/*.styl',['stylus']);
-});
-
-// Default gulp task to run
-// gulp.task('stylus', []);
-
-
-
-gulp.task('js', function () {
-  gulp.src('battle.js')
-    .pipe(uglify({ compress: true }))
-    .pipe(stripDebug())
-    .pipe(gulp.dest('./public'));
+  gulp.watch(app.stylus.src,['stylus']);
+  gulp.watch(app.html.src,['html']);
 });
 
 
-
-gulp.task('css', function () {
-  gulp.src('app/css/**/*.css')
-    .pipe(minifyCSS({ keepSpecialComments: '*', keepBreaks: '*'}))
-    .pipe(gulp.dest('./public/css'));
-});
-
-gulp.task('images', function () {
-  var imgSrc = './app/img/**/*',
-      imgDst = './public/img';
-
-  gulp.src('app/img/**/*')
-    .pipe(changed(imgDst))
-    .pipe(imagemin())
-    .pipe(gulp.dest(imgDst));
-});
-
-gulp.task('html', function () {
-  var htmlSrc = './app/*.html',
-      htmlDst = './public';
-
-  gulp.src(htmlSrc)
-  .pipe(minifyHTML())
-  .pipe(gulp.dest(htmlDst));
-});
-
-gulp.task('fonts', function () {
-  gulp.src('app/fonts/**')
-    .pipe(gulp.dest('./public/fonts'));
-});
-
-gulp.task('data', function () {
-   gulp.src('app/data.json')
-    .pipe(gulp.dest('./public'));
-});
-
-gulp.task('default', [ 'js', 'css', 'images', 'html', 'fonts', 'data' ,'stylus', 'watch']);
