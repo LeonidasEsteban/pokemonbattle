@@ -1,6 +1,8 @@
 window.$ = require('jquery');
 window._ = require('underscore');
 var Backbone = require('backbone');
+var Marionette = require('backbone.marionette');
+
 
 
 
@@ -15,6 +17,17 @@ module.exports = Backbone.Marionette.ItemView.extend({
     modelEvents: {
         'change:life': 'setStatusBar state',
     },
+    initialize : function(){
+        // console.log(this.model.attributes);
+    },
+    onShow : function(){
+        // debugger;
+    },
+    // behaviors: {
+    //     Messages: {
+    //       message: 'leonidas'
+    //     },
+    // },
     onDestroy : function(){
         this.$el.css('background','red');
         console.log('se murió');

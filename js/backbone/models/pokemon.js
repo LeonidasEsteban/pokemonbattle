@@ -30,12 +30,14 @@ module.exports = Backbone.Model.extend({
         }
 
     },
-    attack : function(opponent){
+    attack : function(opponent, move){
         var self = this;
 
         var N = this.get('level');
+
         var A = this.get('attack');
-        this.getAttack().done(function(attack){
+        this.getAttack(move).done(function(attack){
+            // console.log(attack);
             var P =  attack;
             var D = opponent.get('defense');
             var B;
@@ -48,15 +50,17 @@ module.exports = Backbone.Model.extend({
             var V = self.variation(85, 100);
 
             var damage = Math.round(0.01 * B * E * V * (((0.2 * N + 1) * A * P / (25 * D))+2));
-            console.log(N,A,P,D,B,E,V);
+            // console.log(N,A,P,D,B,E,V);
             self.damage(opponent, damage);
         });
 
     },
-    getAttack : function(){
-        var moves = this.get('moves').length;
-
-        var move = Math.floor( Math.random() * moves);
+    getAttack : function(move){
+        // if(move > 0){
+        //     var moves = this.get('moves').length;
+        //     move = Math.floor( Math.random() * moves);
+        // }
+        console.log(move);
         var deferred = $.Deferred();
 
         if(this.get('moves')[move].damage){

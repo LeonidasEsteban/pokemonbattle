@@ -37,7 +37,7 @@ gulp.task('browserify', watchify(function(watchify) {
         .pipe(watchify({
             watch:watching
         }))
-        .pipe(streamify(uglify()))
+        // .pipe(streamify(uglify()))
         .pipe(gulp.dest(app.js.dest))
         .pipe(livereload({auto:true}));
 }));
