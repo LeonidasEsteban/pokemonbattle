@@ -36,6 +36,7 @@ var Attacks = Backbone.Marionette.ItemView.extend({
         // debugger;
 
         this.model.collection.models[0].attack(this.model.collection.models[1],Number(e.target.dataset.move));
+        this.model.collection.models[0].attack(this.model.collection.models[0],Number(e.target.dataset.move));
         // this.model.collection.models[1]
     }
     // className : 

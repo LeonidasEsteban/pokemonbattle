@@ -3280,10 +3280,10 @@ module.exports = Backbone.Model.extend({
 
     },
     getAttack : function(move){
-        // if(move > 0){
-        //     var moves = this.get('moves').length;
-        //     move = Math.floor( Math.random() * moves);
-        // }
+        if(move){
+            var moves = this.get('moves').length;
+            move = Math.floor( Math.random() * moves);
+        }
         console.log(move);
         var deferred = $.Deferred();
 
@@ -3421,6 +3421,7 @@ var Attacks = Backbone.Marionette.ItemView.extend({
         // debugger;
 
         this.model.collection.models[0].attack(this.model.collection.models[1],Number(e.target.dataset.move));
+        this.model.collection.models[0].attack(this.model.collection.models[0],Number(e.target.dataset.move));
         // this.model.collection.models[1]
     }
     // className : 

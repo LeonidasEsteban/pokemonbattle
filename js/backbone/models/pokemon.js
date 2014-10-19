@@ -56,10 +56,10 @@ module.exports = Backbone.Model.extend({
 
     },
     getAttack : function(move){
-        // if(move > 0){
-        //     var moves = this.get('moves').length;
-        //     move = Math.floor( Math.random() * moves);
-        // }
+        if(move){
+            var moves = this.get('moves').length;
+            move = Math.floor( Math.random() * moves);
+        }
         console.log(move);
         var deferred = $.Deferred();
 
