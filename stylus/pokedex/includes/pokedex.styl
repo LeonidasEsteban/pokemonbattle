@@ -9,6 +9,11 @@ Pokedex-size = 400px
     background rojo
     border-radius 10px 0 0 10px
     font-family "Source Code Pro", monospace
+    position absolute
+    left 0
+    right 0
+    top 50%
+    margin-top -250px
     &:after
         @extends .u-clearfix
     &:hover
@@ -17,6 +22,19 @@ Pokedex-size = 400px
             transform rotateY(0)
         .Pokedex-rightBackface
             transform rotateY(180deg)
+    &-play
+        background white
+        color red
+        text-transform uppercase
+        text-decoration none
+        font-weight bold
+        font-family Arial
+        border-bottom 5px solid gray
+        border-radius 5px
+        padding 10px 20px
+        display none
+        &.is-active
+            display inline-block
     &-window
         margin 20px
         border-radius 10px 10px 0 0
@@ -31,6 +49,8 @@ Pokedex-size = 400px
         background-repeat no-repeat
         height 150px
         border 2px solid black
+        text-align center
+
         &.is-fullSize
             background-size 100%
     &-search

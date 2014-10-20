@@ -3652,6 +3652,7 @@ module.exports = Marionette.LayoutView.extend({
             localStorage.clear();
             self.pokemons.add(pokemonModel);
             pokemonModel.save();
+            self.ui.play.addClass('is-active');
         });
 
         this.getPokemonData(pokemon.descriptions[0].resource_uri).done(function(description){
