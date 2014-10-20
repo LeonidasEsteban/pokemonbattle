@@ -13,21 +13,22 @@ module.exports = Backbone.Marionette.ItemView.extend({
     template : '#pokemon-template',
     ui : {
         'statusBar' : '.Stats-bar',
+        'sprite' : '.Pokemon-sprite',
     },
     modelEvents: {
-        'change:life': 'setStatusBar state',
+        'change:life': 'setStatusBar state animation',
     },
+    animations : [ 'bounce', 'flash', 'pulse', 'rubberBand', 'shake', 'swing', 'tada', 'wobble'],
     initialize : function(){
-        // console.log(this.model.attributes);
+
     },
+    
     onShow : function(){
-        // debugger;
+        this.ui.sprite.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', this.endAnimation);
     },
-    // behaviors: {
-    //     Messages: {
-    //       message: 'leonidas'
-    //     },
-    // },
+    endAnimation : function(event){
+        $(this).removeClass(event.originalEvent.animationName);
+    },
     onDestroy : function(){
         this.$el.css('background','red');
         console.log('se murió');
@@ -39,6 +40,10 @@ module.exports = Backbone.Marionette.ItemView.extend({
                 self.model.destroy();
             });
         }
+    },
+    animation : function(){
+        this.animationClass = _.sample(this.animations);
+        this.ui.sprite.addClass(this.animationClass);
     },
     setStatusBar : function(){
         var self = this;

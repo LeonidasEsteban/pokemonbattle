@@ -29,14 +29,16 @@ var Attacks = Backbone.Marionette.ItemView.extend({
     ui : {
 
     },
-    
     initialize : function(){
     },
     attack : function(e){
         // debugger;
-
+        var self = this;
         this.model.collection.models[0].attack(this.model.collection.models[1],Number(e.target.dataset.move));
-        this.model.collection.models[0].attack(this.model.collection.models[0],Number(e.target.dataset.move));
+        setTimeout(function(){
+            self.model.collection.models[1].attack(self.model.collection.models[0],Number(e.target.dataset.move));
+        },2000);
+        // _.delay(,2000);
         // this.model.collection.models[1]
     }
     // className : 

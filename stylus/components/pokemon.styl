@@ -1,3 +1,16 @@
+
+
+animations = (bounce flash pulse rubberBand shake swing tada wobble)
+
+.animated
+  animation-duration: 1s
+  animation-fill-mode: both
+
+for animation_name in animations
+  .{animation_name}
+    @extends .animated
+    animation-name: animation_name
+
 .Pokemon
     position absolute
     padding 20px
@@ -29,12 +42,14 @@
 
         background-repeat no-repeat
         background-position center bottom
+        
+        
     
     &-level
         float right
     &-name
         float left
-    
+
 @keyframes pokemon
     to
         background-position 0 -1200px
