@@ -16,6 +16,7 @@ body
 
 @import "pokedex/includes/mixins.styl"
 @import "animate-stylus/attention_seekers/*.styl"
+@import "animate-stylus/zoom.styl"
 
 
 @import "components/settings.styl"
@@ -26,6 +27,9 @@ body
 @import "pokedex/includes/utilidades.styl"
 @import "pokedex/includes/botones.styl"
 @import "pokedex/includes/pokedex.styl"
+
+
+
 
 
 //utilities
@@ -69,6 +73,22 @@ body
             content ""
             animation .1s background infinite linear
 
+.attack-name
+    color white
+    position absolute
+    background rgba(black,.5)
+    z-index 10
+    padding 10px
+    top 50%
+    height auto
+    margin-top -30px
+    bottom initial
+    text-align center
+    animation-duration 500ms !important
+    font-size 30px
+    visibility hidden
+    &.is-animated
+        visibility visible
 @keyframes background
     0%
         background rgba(red,.5)

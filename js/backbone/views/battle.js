@@ -47,6 +47,7 @@ module.exports = Backbone.Marionette.CompositeView.extend({
     },
     ui : {
         battle : '.Battle',
+        attack : '.attack-name',
     },
     template : '#template-battle',
     className : "Stadium",
@@ -54,7 +55,8 @@ module.exports = Backbone.Marionette.CompositeView.extend({
     emptyView : noPokemon,
     childViewContainer : '#pokemons',
     collectionEvents: {
-        'select': 'animate'
+        'select': 'animate',
+        'attack': 'attackAnimate'
     },
     initialize : function(model){
         this.battleTurn = 0;
@@ -67,8 +69,22 @@ module.exports = Backbone.Marionette.CompositeView.extend({
         // });
 
     },
-    animate : function(){
+    animations : ['zoomIn', 'zoomInDown', 'zoomInLeft', 'zoomInRight', 'zoomInUp'],
+    attackAnimate : function(attack){
         var self = this;
+
+        this.animationClass = _.sample(this.animations);
+        this.ui.attack.text(attack.self + " attacked with " +attack.name);
+        this.ui.attack.addClass(this.animationClass);
+        this.ui.attack.addClass('is-animated');
+        _.delay(function(){
+            self.ui.attack.removeClass(self.animationClass);
+            self.ui.attack.removeClass('is-animated');
+        },1000);
+    },
+    animate : function(lol){
+        var self = this;
+
         this.ui.battle.addClass('is-attack');
         _.delay(function(){
             self.ui.battle.removeClass('is-attack');

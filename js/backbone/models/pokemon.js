@@ -52,6 +52,7 @@ module.exports = Backbone.Model.extend({
             var damage = Math.round(0.01 * B * E * V * (((0.2 * N + 1) * A * P / (25 * D))+2));
             // console.log(N,A,P,D,B,E,V);
             self.damage(opponent, damage);
+            // console.log();
         });
 
     },
@@ -60,7 +61,13 @@ module.exports = Backbone.Model.extend({
             var moves = this.get('moves').length;
             move = Math.floor( Math.random() * moves);
         }
-        console.log(move);
+        var attack = {
+            name : this.get('moves')[move].name,
+            self : this.get('name'),
+        };
+
+        this.collection.trigger('attack', attack);
+
         var deferred = $.Deferred();
 
         if(this.get('moves')[move].damage){
