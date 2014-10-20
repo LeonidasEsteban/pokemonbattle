@@ -3396,6 +3396,7 @@ PokemonBattle.Views = {};
 PokemonBattle.Collections = {};
 
 PokemonBattle.Views.Pokemon = require('../views/pokemon');
+PokemonBattle.Models.Pokemon = require('../models/pokemon');
 
 
 var noPokemon = Backbone.Marionette.ItemView.extend({
@@ -3417,31 +3418,48 @@ var Attacks = Backbone.Marionette.ItemView.extend({
     initialize : function(){
     },
     attack : function(e){
-        // debugger;
         var self = this;
         this.model.collection.models[0].attack(this.model.collection.models[1],Number(e.target.dataset.move));
         setTimeout(function(){
             self.model.collection.models[1].attack(self.model.collection.models[0],Number(e.target.dataset.move));
         },2000);
-        // _.delay(,2000);
-        // this.model.collection.models[1]
     }
-    // className : 
 });
 
 module.exports = Backbone.Marionette.CompositeView.extend({
     events : {
         'click #start' : 'turn',
     },
+    ui : {
+        battle : '.Battle',
+    },
     template : '#template-battle',
     className : "Stadium",
     childView : PokemonBattle.Views.Pokemon,
     emptyView : noPokemon,
     childViewContainer : '#pokemons',
-    
+    collectionEvents: {
+        'select': 'animate'
+    },
     initialize : function(model){
         this.battleTurn = 0;
+        // this.childView.call('setStatusBar',function(){
+        //     console.log('hola');
+        // });
+        // this.collection.on('childview:change',this.lol,this);
+        // this.collection.on("some:prefix:change", function(){
+        //     console.log('reder');
+        // });
+
     },
+    animate : function(){
+        var self = this;
+        this.ui.battle.addClass('is-attack');
+        _.delay(function(){
+            self.ui.battle.removeClass('is-attack');
+        },500);
+    },
+
     onShow : function(){
         var self = this;
         
@@ -3453,11 +3471,11 @@ module.exports = Backbone.Marionette.CompositeView.extend({
         var moves = this.collection.models[0].get('moves').length;
 
         var actionView = new Attacks({model :self.collection.models[0]});
-        console.log(actionView.model.toJSON().moves[1]);
+        // console.log(actionView.model.toJSON().moves[1]);
         Aplicacion.actions.show(actionView);
 
     },
-    
+
     turn : function(){
         var pokemonTurn = this.collection.models[this.battleTurn];
         var opponent    = _.without(this.collection.models, pokemonTurn)[0];
@@ -3472,7 +3490,7 @@ module.exports = Backbone.Marionette.CompositeView.extend({
     },
 });
 
-},{"../views/pokemon":8,"backbone":14,"backbone.marionette":11,"jquery":15,"underscore":16}],8:[function(require,module,exports){
+},{"../models/pokemon":5,"../views/pokemon":8,"backbone":14,"backbone.marionette":11,"jquery":15,"underscore":16}],8:[function(require,module,exports){
 window.$ = require('jquery');
 window._ = require('underscore');
 var Backbone = require('backbone');
@@ -3495,7 +3513,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
     animations : [ 'bounce', 'flash', 'pulse', 'rubberBand', 'shake', 'swing', 'tada', 'wobble'],
     initialize : function(){
-
     },
     
     onShow : function(){
@@ -3521,6 +3538,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.ui.sprite.addClass(this.animationClass);
     },
     setStatusBar : function(){
+        this.model.collection.trigger('select', this.model);
         var self = this;
         this.ui.statusBar.text(this.model.get('life'));
         this.ui.statusBar.css('width', self.model.get('lifePercentageBefore')+"%");
@@ -3666,6 +3684,7 @@ module.exports = Marionette.LayoutView.extend({
                 var battle = new PokemonBattle.Views.Battle({
                     collection : self.pokemons,
                 });
+
                 Aplicacion.wrapper.show(battle);
 
             });

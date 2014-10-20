@@ -131,6 +131,7 @@ module.exports = Marionette.LayoutView.extend({
                 var battle = new PokemonBattle.Views.Battle({
                     collection : self.pokemons,
                 });
+
                 Aplicacion.wrapper.show(battle);
 
             });

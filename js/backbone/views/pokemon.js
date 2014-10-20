@@ -20,7 +20,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
     animations : [ 'bounce', 'flash', 'pulse', 'rubberBand', 'shake', 'swing', 'tada', 'wobble'],
     initialize : function(){
-
     },
     
     onShow : function(){
@@ -46,6 +45,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
         this.ui.sprite.addClass(this.animationClass);
     },
     setStatusBar : function(){
+        this.model.collection.trigger('select', this.model);
         var self = this;
         this.ui.statusBar.text(this.model.get('life'));
         this.ui.statusBar.css('width', self.model.get('lifePercentageBefore')+"%");

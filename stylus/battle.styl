@@ -51,6 +51,31 @@ body
     height 400px
     padding 20px
     relative()
+    
+    > *
+        z-index 5
+        left 0
+        top 0
+        right 0
+        bottom 0
+    &.is-attack
+        &:after
+            top 0
+            z-index 1
+            bottom 0
+            left 0
+            position absolute
+            right 0
+            content ""
+            animation .1s background infinite linear
+
+@keyframes background
+    0%
+        background rgba(red,.5)
+    50%
+        background rgba(blue,.5)
+    100%
+        background rgba(red,.5)
 
 +to(740px)
     body
