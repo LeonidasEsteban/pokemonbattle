@@ -30,6 +30,8 @@ module.exports = Backbone.Marionette.ItemView.extend({
     },
     onDestroy : function(){
         this.$el.css('background','red');
+        $('#audio').attr('src','media/sounds/victory.mp3');
+
         console.log('se murió');
     },
     state : function(){

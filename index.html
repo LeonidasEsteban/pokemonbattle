@@ -15,7 +15,7 @@
 <!-- http://veekun.com/dex/media/pokemon/cries/<%= national_id %>.ogg -->
 <script type="text/template" id="template-battle">  
     <div class="Battle">
-    <audio src="media/sounds/battle.mp3" autoplay></audio>
+    <audio id="audio" src="media/sounds/battle.mp3" autoplay></audio>
         <p class="attack-name"><span>pikachu</span> ha usado Impact trueno</p>
         <div id="pokemons"></div>
     </div>
@@ -41,6 +41,8 @@
         <%= description %>
 </script>
 <script type="text/template" id="template-setting">
+    <audio  src="media/sounds/start.mp3" autoplay></audio>
+
     <div class="Pokedex-left">
         <div class="Pokedex-leftTop">
             <div class="Btn Btn--coral Btn--big Btn--rounded" id="light"></div>
