@@ -64,9 +64,11 @@ module.exports = Marionette.LayoutView.extend({
     },
     getPokemon : function(pokemon){
         var self = this;
-
+        pokemon.sprite = "http://play.pokemonshowdown.com/sprites/xyani-back/"+pokemon.name.toLowerCase()+".gif";
+        pokemon.spriteFront = "http://play.pokemonshowdown.com/sprites/xyani/"+pokemon.name.toLowerCase()+".gif";
+        // debugger
         this.getPokemonData(pokemon.sprites[0].resource_uri, pokemon.descriptions[0].resource_uri).done(function(sprite, description){
-            pokemon.sprite = self.pokeapiURL + sprite.image;
+            // pokemon.sprite = self.pokeapiURL + sprite.image;
             var pokemonModel = new PokemonBattle.Models.Pokemon(pokemon);
             sprite = new Sprite({model:pokemonModel});
             self.window.show(sprite);
@@ -120,7 +122,8 @@ module.exports = Marionette.LayoutView.extend({
 
             self.getPokemonData(pokemon.sprites[0].resource_uri).done(function(sprite){
 
-                pokemon.sprite = self.pokeapiURL + sprite.image;
+                // pokemon.sprite = self.pokeapiURL + sprite.image;
+                pokemon.sprite = "http://play.pokemonshowdown.com/sprites/xyani/"+pokemon.name.toLowerCase()+".gif";
                 
                 var pokemonModel = new PokemonBattle.Models.Pokemon(pokemon);
 

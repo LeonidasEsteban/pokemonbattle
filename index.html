@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>Pokemon battle</title>
     <meta name="viewport" content="width=device-width, user-scalable=0">
-    <link href='http://fonts.googleapis.com/css?family=Orbitron:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/battle.css"/>
 </head>
 <body>
 
@@ -34,7 +32,7 @@
         <% } %>
 </script>
 <script type="text/template" id="template-pokeWindow">
-        <img src="<%= sprite %>" class=""/>
+        <img src="<%= spriteFront %>" class=""/>
 </script>
 <script type="text/template" id="template-pokeDescription">
         <%= name %>
@@ -104,8 +102,9 @@
     <audio src="http://veekun.com/dex/media/pokemon/cries/<%= national_id %>.ogg" autoplay></audio>
 <% } %> -->
 <script type="text/template" id="pokemon-template">
-    <div class="Pokemon-sprite" style="background-image:url(<%= sprite %>)">
-    </div>
+
+    <img src="<%= sprite %>" class="Pokemon-sprite" alt="<% name %>">
+    
     <div class="Stats">
         <div class="Stats-top">
             <div class="Pokemon-name"><%= name %></div>
@@ -121,10 +120,23 @@
         </div>
     </div>
 </script>
-<script src="http://192.168.0.19:35729/livereload.js?snipver=1"></script>
 
-<script src="js/public/battle.js"></script>
+<script async src="js/public/battle.js"></script>
+<script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Orbitron:400,700:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })(); </script>
 
 
 </body>
 </html>
+<link rel="stylesheet" href="css/battle.css"/>

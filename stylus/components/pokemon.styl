@@ -12,33 +12,47 @@ for animation_name in animations
     animation-name: animation_name
 
 .Pokemon
-    position absolute
-    padding 20px
-    left 0
-    right 0
+    // position absolute
+    // padding 20px
+    // left 0
+    // right 0
     overflow hidden
+    // flex 1
+    // width 100%
+    display flex
+    justify-content space-between
     &:nth-of-type(1)
-        bottom 0
-        .Pokemon-sprite
-            float left
-            transform rotateY(180deg)
+        // bottom 0
+        // background red
+        // align-self flex-end
+        order 2
+        // .Pokemon-sprite
+        //     float left
+        //     // transform rotateY(180deg)
 
         .Stats
-            float right
+            // float right
+            align-self flex-end
+            
             
     &:nth-of-type(2)
-        top 0
+        // top 0
+        // align-self flex-start
+        
+        
         .Pokemon-sprite
-            float right
-            margin-top 120px
-            margin-right 100px
+            // float right
+            height 100%
+            // align-self flex-end
+            margin-top 160px
+            margin-right 130px
         .Stats
-            float left
+            order -1
 
     .Pokemon-sprite
         // width 120px
-        width 20%
-        height 120px
+        // width 20%
+        // height 120px
 
         background-repeat no-repeat
         background-position center bottom
@@ -58,10 +72,12 @@ for animation_name in animations
     background #F0F0D0
     border 5px solid black
     border-radius 10px 
-    margin-top 10px
+    // margin-top 10px
     padding 10px
     // width 300px
     width 50%
+    height 100%
+        
     &-top
         overflow hidden
     &-life

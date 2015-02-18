@@ -21,7 +21,6 @@ var noPokemon = Backbone.Marionette.ItemView.extend({
 
 
 
-
 var Attacks = Backbone.Marionette.ItemView.extend({
     template : '#template-action',
     events : {
