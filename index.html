@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, user-scalable=0">
 </head>
 <body>
-
-    
+    <div class="banner">
+        <p>Juega Pokemon y gana un Premio gracias a <a href="http://twitter.com/gimoti" target="_blank">@gimoti</a> y <a href="https://twitter.com/search?q=%23CPMX6&src=tyah" target="_blank">#CPMX6</a></p>
+    </div>
     <div class="PokemonBattle">
     </div>
 <!-- http://veekun.com/dex/media/pokemon/cries/<%= national_id %>.ogg -->
@@ -58,7 +59,7 @@
             <div class="Btn Btn--green Btn--large Btn--round"></div>
             <div class="Btn Btn--orange Btn--large Btn--round"></div>
             <form action="/pokemon/" class="Pokedex-search" id="search">
-                <input type="text" placeholder="Nombre o ID" name="pokemon">
+                <input type="text" placeholder="Nombre o ID (1...718)" name="pokemon">
                 <input type="submit" class="Btn Btn--blue" value="Buscar"/>
             </form>
             <a id="play" class="Pokedex-play" href="#battle">Jugar</a>
@@ -122,6 +123,7 @@
     </div>
 </script>
 
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 <script async src="js/public/battle.js"></script>
 <script type="text/javascript">
   WebFontConfig = {
