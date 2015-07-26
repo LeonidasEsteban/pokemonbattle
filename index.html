@@ -25,11 +25,11 @@
     </div>
 </script>
 <script type="text/template" id="template-action">
-        <% for(var move in "iiii") { %>
-            <a class="Action-attack" data-move="<%= move %>">
-            <%= moves[move].name %>  
-            </a>
-        <% } %>
+    <% for(var move in "iiii") { %>
+        <a class="Action-attack" data-move="<%= move %>">
+        <%= moves[move].name %>
+        </a>
+    <% } %>
 </script>
 <script type="text/template" id="template-pokeWindow">
         <img src="<%= spriteFront %>" class=""/>
@@ -39,7 +39,7 @@
         <%= description %>
 </script>
 <script type="text/template" id="template-setting">
-    <audio  src="media/sounds/start.mp3" autoplay></audio>
+    <!--audio  src="media/sounds/start.mp3" autoplay></audio-->
 
     <div class="Pokedex-left">
         <div class="Pokedex-leftTop">
@@ -58,7 +58,8 @@
             <div class="Btn Btn--green Btn--large Btn--round"></div>
             <div class="Btn Btn--orange Btn--large Btn--round"></div>
             <form action="/pokemon/" class="Pokedex-search" id="search">
-                <input type="text" placeholder="Buscar..." name="pokemon">
+                <input type="text" placeholder="Nombre o ID" name="pokemon">
+                <input type="submit" class="Btn Btn--blue" value="Buscar"/>
             </form>
             <a id="play" class="Pokedex-play" href="#battle">Jugar</a>
 

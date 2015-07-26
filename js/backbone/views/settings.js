@@ -74,6 +74,7 @@ module.exports = Marionette.LayoutView.extend({
             self.window.show(sprite);
 
             localStorage.clear();
+            self.pokemons.pop();
             self.pokemons.add(pokemonModel);
             pokemonModel.save();
             self.ui.play.addClass('is-active');
@@ -130,7 +131,7 @@ module.exports = Marionette.LayoutView.extend({
 
                 self.pokemons.add(pokemonModel);
                 pokemonModel.save();
-                Backbone.history.navigate('battle', {'trigger':true});
+                Backbone.history.navigate('battle');
 
                 var battle = new PokemonBattle.Views.Battle({
                     collection : self.pokemons,

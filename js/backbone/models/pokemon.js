@@ -57,10 +57,11 @@ module.exports = Backbone.Model.extend({
 
     },
     getAttack : function(move){
-        if(move){
-            var moves = this.get('moves').length;
-            move = Math.floor( Math.random() * moves);
-        }
+        console.log(move)
+        // if(!move){
+        //     var moves = this.get('moves').length;
+        //     move = Math.floor( Math.random() * moves);
+        // }
         var attack = {
             name : this.get('moves')[move].name,
             self : this.get('name'),
