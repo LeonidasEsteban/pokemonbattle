@@ -59,7 +59,7 @@ Pokedex-size = 400px
             background-size 100%
     &-search
         margin 20px 0
-        input
+        input[type="text"]
             background orange
             border none
             border 1px solid black
@@ -72,6 +72,14 @@ Pokedex-size = 400px
                 border 1px solid black
             &::-webkit-input-placeholder
                 color white
+        input[type="submit"]
+            padding .7em
+            border-radius radius
+            font-size 1em
+            transition .2s
+            outline 0
+            &:active
+                transform scale(.9)
     &-description
         background #30FA04
         margin 20px

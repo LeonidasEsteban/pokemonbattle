@@ -35,7 +35,7 @@ var Attacks = Backbone.Marionette.ItemView.extend({
         var self = this;
         this.model.collection.models[0].attack(this.model.collection.models[1],Number(e.target.dataset.move));
         setTimeout(function(){
-            self.model.collection.models[1].attack(self.model.collection.models[0],Number(e.target.dataset.move));
+            self.model.collection.models[1].attack(self.model.collection.models[0],Number(Math.round(Math.random() * 3 + 0)));
         },2000);
     }
 });

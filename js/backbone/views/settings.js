@@ -74,6 +74,7 @@ module.exports = Marionette.LayoutView.extend({
             self.window.show(sprite);
 
             localStorage.clear();
+            self.pokemons.pop();
             self.pokemons.add(pokemonModel);
             pokemonModel.save();
             self.ui.play.addClass('is-active');
