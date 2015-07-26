@@ -92,7 +92,7 @@ module.exports = Backbone.Marionette.CompositeView.extend({
             url: "http://apigimoti.azurewebsites.net/api/Demo?app_key=55b448b3e0e3cd1660733eb8",
             method: "get",
             success: function (result) {
-                self.ui.attack.html("<p style='text-align:center;'>Gracias por participar, ganaste: <br/><span style='color:red'>"+result.rewardName+"</span> <br/> <a class='Btn Btn--tryAgain' href='/'>Jugar otra vez</a></p>");
+                self.ui.attack.html("<p style='text-align:center;'>Gracias por participar, ganaste: <br/><span style='color:red'>"+result.rewardName+"</span> <br/> <a class='Btn Btn--tryAgain' onClick='location.reload()'>Jugar otra vez</a></p>");
                 self.ui.attack.addClass('is-animated');
             }
         });
