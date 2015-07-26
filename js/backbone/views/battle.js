@@ -1,6 +1,6 @@
 window.$ = require('jquery');
 window._ = require('underscore');
-var Backbone = require('backbone');
+window.Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 
 Backbone.$ = $;
@@ -35,7 +35,9 @@ var Attacks = Backbone.Marionette.ItemView.extend({
         var self = this;
         this.model.collection.models[0].attack(this.model.collection.models[1],Number(e.target.dataset.move));
         setTimeout(function(){
-            self.model.collection.models[1].attack(self.model.collection.models[0],Number(Math.round(Math.random() * 3 + 0)));
+            if(self.model.collection.models[1]){
+                self.model.collection.models[1].attack(self.model.collection.models[0],Number(Math.round(Math.random() * 3 + 0)));
+            }
         },2000);
     }
 });
@@ -55,7 +57,8 @@ module.exports = Backbone.Marionette.CompositeView.extend({
     childViewContainer : '#pokemons',
     collectionEvents: {
         'select': 'animate',
-        'attack': 'attackAnimate'
+        'attack': 'attackAnimate',
+        'finishGame': 'finishGame',
     },
     initialize : function(model){
         this.battleTurn = 0;
@@ -78,8 +81,14 @@ module.exports = Backbone.Marionette.CompositeView.extend({
         this.ui.attack.addClass('is-animated');
         _.delay(function(){
             self.ui.attack.removeClass(self.animationClass);
-            self.ui.attack.removeClass('is-animated');
+            self.ui.attack.css({'visibility':'visible'});
         },1000);
+    },
+    finishGame: function(){
+        var self = this;
+        $('#audio').attr('src','media/sounds/victory.mp3');
+        $('#moves').remove();
+        
     },
     animate : function(lol){
         var self = this;

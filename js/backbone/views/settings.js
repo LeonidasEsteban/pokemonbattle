@@ -131,7 +131,7 @@ module.exports = Marionette.LayoutView.extend({
 
                 self.pokemons.add(pokemonModel);
                 pokemonModel.save();
-                Backbone.history.navigate('battle', {'trigger':true});
+                Backbone.history.navigate('battle');
 
                 var battle = new PokemonBattle.Views.Battle({
                     collection : self.pokemons,
