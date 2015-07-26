@@ -92,7 +92,7 @@ module.exports = Backbone.Marionette.CompositeView.extend({
             url: "http://apigimoti.azurewebsites.net/api/Demo?app_key=55b448b3e0e3cd1660733eb8",
             method: "get",
             success: function (result) {
-                self.ui.attack.html("<p style='text-align:center;'>Gracias por participar, ganaste: <br/><span style='color:red'>"+result.rewardName+"</span> <br/> <a class='Btn Btn--tryAgain' onClick='location.reload()'>Jugar otra vez</a></p>");
+                self.ui.attack.html("<p style='text-align:center;'>Gracias por participar, ganaste: <br/><span style='color:red'>"+result.rewardName+"</span> <br/> <a class='Btn Btn--tryAgain' onClick='location.reload()'>Jugar otra vez</a> <a class='Btn Btn--gift' href='https://twitter.com/intent/tweet?screen_name=gimoti&text=Hola%2C%20quiero%20mi%20"+result.rewardName+".%20%20El%20código%20es:%20"+result.rewardCode+"' class='twitter-mention-button' data-lang='es' data-size='large' data-dnt='true'>Reclama tu premio</a></p>");
                 self.ui.attack.addClass('is-animated');
             }
         });

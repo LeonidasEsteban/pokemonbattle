@@ -1,3 +1,11 @@
+@keyframes opacity
+    0%
+        // opacity .5
+    50%
+        opacity 1
+        transform scale(1.1)
+    100%
+        // opacity .5
 
 .Btn
     border 1px solid black
@@ -9,6 +17,18 @@
         transform scale(.9)
     &.is-animated
         animation .3s isAnimated infinite
+    &--gift
+        background red
+        color white
+        text-decoration none
+        padding 1em 
+        font-size .5em
+        border none
+        // border-bottom 2px solid white
+        animation 1s opacity infinite
+        box-shadow 0 0 10px red
+        &:active
+            transform scale(.9)
     &--tryAgain
         background azul
         color white
